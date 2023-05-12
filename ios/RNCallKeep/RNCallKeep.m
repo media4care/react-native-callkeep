@@ -821,26 +821,6 @@ RCT_EXPORT_METHOD(getAudioRoutes: (RCTPromiseResolveBlock)resolve
     }
 }
 
-+ (NSSet *) getSupportedHandleTypes:(id) handleType {
-    if(handleType){
-        if([handleType isKindOfClass:[NSArray class]]) {
-            NSSet *types = [NSSet set];
-
-            for (NSString* type in handleType) {
-                types = [types setByAddingObject:[NSNumber numberWithInteger:[RNCallKeep getHandleType:type]]];
-            }
-
-            return types;
-        } else {
-            int _handleType = [RNCallKeep getHandleType:handleType];
-
-            return [NSSet setWithObjects:[NSNumber numberWithInteger:_handleType], nil];
-        }
-    } else {
-        return [NSSet setWithObjects:[NSNumber numberWithInteger:CXHandleTypePhoneNumber], nil];
-    }
-}
-
 + (int)getHandleType:(NSString *)handleType
 {
     if ([handleType isEqualToString:@"generic"]) {
@@ -865,7 +845,7 @@ RCT_EXPORT_METHOD(getAudioRoutes: (RCTPromiseResolveBlock)resolve
     providerConfiguration.supportsVideo = YES;
     providerConfiguration.maximumCallGroups = 3;
     providerConfiguration.maximumCallsPerCallGroup = 1;
-    providerConfiguration.supportedHandleTypes = [RNCallKeep getSupportedHandleTypes:settings[@"handleType"]];
+    providerConfiguration.supportedHandleTypes = [[NSSet alloc] initWithObjects:[NSNumber numberWithInt:(int)CXHandleTypeGeneric], nil];
 
     if (settings[@"supportsVideo"]) {
         providerConfiguration.supportsVideo = [settings[@"supportsVideo"] boolValue];
